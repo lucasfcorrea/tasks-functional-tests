@@ -11,6 +11,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import net.bytebuddy.agent.builder.AgentBuilder.Identified;
+
 public class TasksTest 
 {	
 	public WebDriver acessarAplicacao() throws MalformedURLException
@@ -103,6 +105,33 @@ public class TasksTest
 		
 		  //Validar mensagem de sucesso
 		  String message = driver.findElement(By .id("message")).getText();
+		  Assert.assertEquals("Due date must not be in past", message);
+		}
+		
+		finally
+		{
+		  //Fechar o browser
+		  driver.quit();
+		}
+	}
+	
+	@Test
+	public void deveRemoverTarefaComSucesso() throws MalformedURLException
+	{
+		WebDriver driver = acessarAplicacao();
+		try
+		{
+		  //inserir tarefa
+		  driver.findElement(By.id("addTodo")).click();
+		  driver.findElement(By .id("task")).sendKeys("Teste via Selenium");
+		  driver.findElement(By .id("dueDate")).sendKeys("01/02/2030");
+		  driver.findElement(By .id("saveButton")).click();
+		  String message = driver.findElement(By .id("message")).getText();
+		  Assert.assertEquals("Due date must not be in past", message);
+		  
+		  //remover a tarefa
+		  driver.findElement(By.xpath("//a[@class='btn btn-outline-danger btn-sm']")).click();
+		  message = driver.findElement(By .id("message")).getText();
 		  Assert.assertEquals("Due date must not be in past", message);
 		}
 		
